@@ -13,16 +13,16 @@ public class TelaPetshop extends JFrame {
  private final JTextField campNome = new JTextField(10);
  private final JTextField campRaca = new JTextField(10);
  private final JTextField campIdade = new JTextField(10);
-	
  private final JTextField TutorNome = new JTextField(10);
  private final JTextField TutorTelefone = new JTextField(10);
+ 
  // ── Área de resultado ──────────────────────────────────
  private final JTextArea areaResultado = new JTextArea(12, 50);
 
  // ── Botões ─────────────────────────────────────────────
  private final JButton btnCadastrar = new JButton ("Cadastrar");
  private final JButton btnBuscar = new JButton ("Buscar");
- private final JButton btnAtualizar = new JButton ("Buscar");
+ private final JButton btnAtualizar = new JButton ("Atualizar");
  private final JButton btnRemover = new JButton ("Remover");
 	
  // ── Construtor ─────────────────────────────────────────
@@ -86,16 +86,27 @@ public class TelaPetshop extends JFrame {
 
  // ── ActionListeners ────────────────────────────────────
  private void configurarListeners() {
+ 
 
   // ---- CADASTRAR ----
   btnCadastrar.addActionListener(new ActionListener() {
    public void actionPerformed(ActionEvent e) {
     String nome = campNome.getText().trim();
     String raca = campRaca.getText().trim();
-    int idade = Integer.parseInt(campIdade.getText());
+    String dono = TutorNome.getText().trim();
+    
+    int idade = 0;
+    int telefone = 0;
+    try {
+    	 telefone = Integer.parseInt(TutorTelefone.getText());
+    	 idade = Integer.parseInt(campIdade.getText());
+    } catch (NumberFormatException ex) {
+    	JOptionPane.showMessageDialog(null,"ERRO: Só é permitido números neste campo: telefone, idade.","ERRO", JOptionPane.ERROR_MESSAGE);  
+    	return;
+    	}
     
     if (nome.isEmpty()) {
-     exibirTexto("ERRO: O campo Nome é obrigatório.");
+    	JOptionPane.showMessageDialog(null,"ERRO: O campo Nome é obrigatório.", dono, JOptionPane.ERROR_MESSAGE); 
      return;
     }
     
@@ -104,20 +115,32 @@ public class TelaPetshop extends JFrame {
     }
     
     if (idade <= 0) {
-     exibirTexto("ERRO: Idade inválida.");
+    	JOptionPane.showMessageDialog(null,"ERRO: Idade inválida.",dono,JOptionPane.ERROR_MESSAGE);
      return;
     }
 
     Cachorro novo = new Cachorro(nome, raca, idade);
-
+    Cliente novodono = new Cliente(dono, telefone);
+    novo.setDono(novodono);
     repositorio.adicionar(novo);
-    exibirTexto("Pet cadastrado com sucesso!\n\n" + novo.exibirDados());
+    areaResultado.setText("Pet cadastrado com sucesso!\n\n" + novo.exibirDados());
     limparCampos();
    }
   });
-
+ 
+ 
+//Botão de buscar:
+ btnBuscar.addActionListener(new ActionListener() {
+	 public void actionPerformed(ActionEvent e) {
+	 	String nome = campNome.getText().trim();
+	    repositorio.buscarPorNome(nome);
+	 }
+	 });
  }
+	  
+	 
 
+ 
  // ── Métodos auxiliares ─────────────────────────────────
 
  /** Exibe texto na área de resultado, substituindo o conteúdo anterior. */
@@ -133,4 +156,5 @@ public class TelaPetshop extends JFrame {
  }
 
 }
+
 

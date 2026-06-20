@@ -2,9 +2,9 @@ package ClinicaVeterinaria;
 
 public class Cliente {
  private String nome;
- private String telefone;
+ private int telefone;
 	
- Cliente(String nome, String telefone, String cpf){
+ Cliente(String nome, int telefone){
   this.nome = nome;
   this.telefone = telefone;
  }

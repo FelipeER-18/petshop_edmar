@@ -2,6 +2,30 @@ package ClinicaVeterinaria;
 
 abstract class Animal {
  protected String nome;
+ public String getNome() {
+	return nome;
+}
+
+ public void setNome(String nome) {
+	this.nome = nome;
+ }
+
+ public int getIdade() {
+	return idade;
+ }
+
+ public void setIdade(int idade) {
+	this.idade = idade;
+ }
+
+ public Cliente getDono() {
+	return dono;
+ }
+
+ public void setDono(Cliente dono) {
+	this.dono = dono;
+ }
+
  protected int idade;
  protected Cliente dono;
  protected static int totalAnimal = 0;
@@ -18,7 +42,7 @@ abstract class Animal {
   this.nome = nome;
   
   if(idade<0) {
-   System.out.println("Idade inv�lida.");
+   System.out.println("Idade invalida.");
   }else {
    this.idade = idade;
   }
@@ -40,7 +64,7 @@ abstract class Animal {
    
    return ("\nNome: " + nome + "\nIdade: " + idade + " Anos" + "\nTutor: " + dono.exibirInfo());
   } else {
-   return ("\nNome: " + nome + "\nIdade: " + idade + " Anos" + "\nTutor: O animal n�o tem dono.\n");
+	  return ("\nNome: " + nome + "\nIdade: " + idade + " Anos" + "\nTutor: O animal não tem dono.\n");
   }
 
  }

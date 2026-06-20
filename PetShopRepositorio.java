@@ -18,7 +18,11 @@ public class PetShopRepositorio {
   * @return o Animal encontrado, ou null se n�o existir.
   */
  public Animal buscarPorNome(String nome) {
-
+for (Animal anima: animais) {
+	if (anima.getNome().equalsIgnoreCase(nome)) {
+		return anima;
+	}
+}
   return null;
  }
 

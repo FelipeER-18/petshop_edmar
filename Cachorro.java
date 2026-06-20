@@ -23,7 +23,7 @@ public class Cachorro extends Animal{
  @Override
  public String exibirDados() {
   return
-    super.exibirDados() + "\nRa�a: " + raca;
+    super.exibirDados() + "\nRaça: " + raca;
  }
 
  @Override
