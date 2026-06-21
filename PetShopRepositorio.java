@@ -25,6 +25,30 @@ for (Animal anima: animais) {
 }
   return null;
  }
+ 	
+ 
+ public boolean atualizar(String nome, String raca, int idade, String dono, int telefone) {
+     for (Animal anima : animais) {
+         if (anima.getNome().equalsIgnoreCase(nome)) {
+             
+             
+             anima.setIdade(idade);
+             
+            
+             Cliente novoTutor = new Cliente(dono, telefone);
+             anima.setDono(novoTutor);
+             
+            
+             if (anima instanceof Cachorro) {
+                 Cachorro cao = (Cachorro) anima;
+                 cao.setRaca(raca); 
+             }
+             
+             return true;
+         }
+     }
+     return false; 
+ }
 
  /**
   * Remove o animal com o nome informado.
@@ -32,12 +56,20 @@ for (Animal anima: animais) {
   * @return true se encontrou e removeu, false caso contr�rio.
   */
  public boolean remover(String nome) {
-  return true;
+	 for (Animal anima: animais) {
+		 if (anima.getNome().equalsIgnoreCase(nome)) {
+			 animais.remove(anima);
+			 return true;
+		 }
+			
+	 }
+  return false;
  }
 
- /** Retorna a lista completa de animais cadastrados (c�pia defensiva). */
+ /** Retorna a lista completa de animais cadastrados (cpia defensiva). */
  public ArrayList<Animal> listarTodos() {
   return animais;
+  
  }
 
  /** Quantidade de animais cadastrados no reposit�rio. */

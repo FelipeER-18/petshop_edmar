@@ -20,6 +20,10 @@ public class Cachorro extends Animal{
   totalCachorros += 1;
  }
 
+
+public void setRaca(String raca) {
+  this.raca = raca;
+} 
  @Override
  public String exibirDados() {
   return

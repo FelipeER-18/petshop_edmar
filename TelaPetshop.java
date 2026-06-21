@@ -6,8 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class TelaPetshop extends JFrame {
-
- private final PetShopRepositorio repositorio = new PetShopRepositorio();
+private final PetShopRepositorio repositorio = new PetShopRepositorio();
 
  // ── Campos do formulário ───────────────────────────────
  private final JTextField campNome = new JTextField(10);
@@ -106,7 +105,7 @@ public class TelaPetshop extends JFrame {
     	}
     
     if (nome.isEmpty()) {
-    	JOptionPane.showMessageDialog(null,"ERRO: O campo Nome é obrigatório.", dono, JOptionPane.ERROR_MESSAGE); 
+    	JOptionPane.showMessageDialog(null,"ERRO: O campo Nome é obrigatório.", "ERRO:", JOptionPane.ERROR_MESSAGE); 
      return;
     }
     
@@ -115,7 +114,7 @@ public class TelaPetshop extends JFrame {
     }
     
     if (idade <= 0) {
-    	JOptionPane.showMessageDialog(null,"ERRO: Idade inválida.",dono,JOptionPane.ERROR_MESSAGE);
+    	JOptionPane.showMessageDialog(null,"ERRO: Idade inválida.","ERRO:",JOptionPane.ERROR_MESSAGE);
      return;
     }
 
@@ -123,36 +122,134 @@ public class TelaPetshop extends JFrame {
     Cliente novodono = new Cliente(dono, telefone);
     novo.setDono(novodono);
     repositorio.adicionar(novo);
-    areaResultado.setText("Pet cadastrado com sucesso!\n\n" + novo.exibirDados());
+    exibirTexto("Pet cadastrado com sucesso!\n\n" + novo.exibirDados());
     limparCampos();
    }
   });
  
  
 //Botão de buscar:
- btnBuscar.addActionListener(new ActionListener() {
-	 public void actionPerformed(ActionEvent e) {
-	 	String nome = campNome.getText().trim();
-	    repositorio.buscarPorNome(nome);
-	 }
-	 });
- }
-	  
-	 
+  btnBuscar.addActionListener(new ActionListener() {
+	   public void actionPerformed(ActionEvent e) {
+	    String nome = campNome.getText().trim();
+	    
+	    
+	    if (nome.isEmpty()) {
+	     JOptionPane.showMessageDialog(null, "Digite o nome do pet no campo 'Nome' para buscar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+	     return;
+	    }
+	    
+	   
+	    Animal encontrado = repositorio.buscarPorNome(nome);
+	    
+	    if (encontrado != null) {
+	     
+	     exibirTexto("Pet Encontrado:\n" + encontrado.exibirDados());
+	    } else {
+	   
+	     exibirTexto("Aviso: Nenhum pet cadastrado com o nome '" + nome + "'.");
+	     JOptionPane.showMessageDialog(null, "Pet não encontrado no sistema.", "Não Encontrado", JOptionPane.ERROR_MESSAGE);
+	    }
+	   }
+	  });
+ 
+ 
+//Atualizar
+btnAtualizar.addActionListener(new ActionListener() {
+ public void actionPerformed(ActionEvent e) {
+  String nome = campNome.getText().trim();
+  String raca = campRaca.getText().trim();
+  String dono = TutorNome.getText().trim();
+  
+  
+  int idade = 0;
+  int telefone = 0;
+  
+  if (nome.isEmpty()) {
+      JOptionPane.showMessageDialog(null, "Por favor, digite o 'Nome' do pet que você deseja atualizar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+      return;
+  }
+  
+  try {
 
+  	 telefone = Integer.parseInt(TutorTelefone.getText().trim());
+  	 idade = Integer.parseInt(campIdade.getText().trim());
+  } catch (NumberFormatException ex) {
+  	JOptionPane.showMessageDialog(null,"ERRO: Só é permitido números nos campos telefone e idade.","ERRO:", JOptionPane.ERROR_MESSAGE);  
+  	return;
+  }
+  
+  if (idade <= 0) {
+  	JOptionPane.showMessageDialog(null,"ERRO: Idade inválida para atualização.","ERRO",JOptionPane.ERROR_MESSAGE);
+      return;
+  }
+  
+  if (raca.isEmpty()) {
+      raca = "Indefinida";
+  }
+
+
+  boolean atualizou = repositorio.atualizar(nome, raca, idade, dono, telefone);
+  
+  if (atualizou) {
+      
+      Animal petAtualizado = repositorio.buscarPorNome(nome);
+      exibirTexto("Pet atualizado com sucesso!\n" + petAtualizado.exibirDados());
+      
+      JOptionPane.showMessageDialog(null, "Os dados do pet '" + nome + "' foram atualizados!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+      limparCampos();
+  } else {
+      
+      exibirTexto("Não foi possível atualizar: Nenhum pet encontrado com o nome '" + nome + "'.\n");
+      JOptionPane.showMessageDialog(null, "Pet não encontrado no sistema.", "Não Encontrado", JOptionPane.ERROR_MESSAGE);
+  }
+ }
+});
+
+ 
+//Remover
+btnRemover.addActionListener(new ActionListener() {
+ public void actionPerformed(ActionEvent e) {
+  String nome = campNome.getText().trim();
+  
+  if (nome.isEmpty()) {
+   JOptionPane.showMessageDialog(null, "Digite o nome do pet que deseja remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
+   return;
+  }
+  
+ 
+  boolean removeu = repositorio.remover(nome);
+  
+  if (removeu) {
+   areaResultado.setText("");
+   exibirTexto("O pet '" + nome + "' foi removido com sucesso do sistema.");
+   JOptionPane.showMessageDialog(null, "Pet removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+   limparCampos(); 
+  } else {
+   exibirTexto("Erro ao remover: Não foi encontrado nenhum pet com o nome '" + nome + "'.");
+   JOptionPane.showMessageDialog(null, "Não foi possível remover. Pet não encontrado.", "ERRO:", JOptionPane.ERROR_MESSAGE);
+  }
+ }
+});
+ }
  
  // ── Métodos auxiliares ─────────────────────────────────
 
  /** Exibe texto na área de resultado, substituindo o conteúdo anterior. */
  private void exibirTexto(String texto) {
-  areaResultado.setText(texto);
+  areaResultado.append(texto + "\n--------------------------------------\n");
+  
  }
 
  /** Limpa todos os campos do formulário. */
  private void limparCampos() {
   campNome.setText("");
   campRaca.setText("");
+  campIdade.setText("");
+  TutorNome.setText("");
+  TutorTelefone.setText("");
   campNome.requestFocus();
+  
  }
 
 }
