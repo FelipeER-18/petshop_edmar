@@ -209,28 +209,36 @@ btnAtualizar.addActionListener(new ActionListener() {
  
 //Remover
 btnRemover.addActionListener(new ActionListener() {
- public void actionPerformed(ActionEvent e) {
-  String nome = campNome.getText().trim();
-  
-  if (nome.isEmpty()) {
-   JOptionPane.showMessageDialog(null, "Digite o nome do pet que deseja remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
-   return;
-  }
-  
- 
-  boolean removeu = repositorio.remover(nome);
-  
-  if (removeu) {
-   areaResultado.setText("");
-   exibirTexto("O pet '" + nome + "' foi removido com sucesso do sistema.");
-   JOptionPane.showMessageDialog(null, "Pet removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-   limparCampos(); 
-  } else {
-   exibirTexto("Erro ao remover: Não foi encontrado nenhum pet com o nome '" + nome + "'.");
-   JOptionPane.showMessageDialog(null, "Não foi possível remover. Pet não encontrado.", "ERRO:", JOptionPane.ERROR_MESSAGE);
-  }
- }
-});
+	 public void actionPerformed(ActionEvent e) {
+	  String nome = campNome.getText().trim();
+	  
+	  if (nome.isEmpty()) {
+	   JOptionPane.showMessageDialog(null, "Digite o nome do pet que deseja remover.", "Aviso", JOptionPane.WARNING_MESSAGE);
+	   return;
+	  }
+	  
+	  boolean removeu = repositorio.remover(nome);
+	  
+	  if (removeu) {
+	   areaResultado.setText(""); 
+	   exibirTexto("O pet '" + nome + "' foi removido com sucesso do sistema.\n");
+	   exibirTexto("=== LISTA ATUALIZADA DE PETS ===");
+	   if (repositorio.listarTodos().isEmpty()) {
+	       exibirTexto("Nenhum pet cadastrado no sistema.");
+	   } else {
+	       for (Animal anima : repositorio.listarTodos()) {
+	           exibirTexto(anima.exibirDados());
+	       }
+	   }
+	   
+	   JOptionPane.showMessageDialog(null, "Pet removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+	   limparCampos(); 
+	  } else {
+	   exibirTexto("Erro ao remover: Não foi encontrado nenhum pet com o nome '" + nome + "'.");
+	   JOptionPane.showMessageDialog(null, "Não foi possível remover. Pet não encontrado.", "ERRO:", JOptionPane.ERROR_MESSAGE);
+	  }
+	 }
+	});
  }
  
  // ── Métodos auxiliares ─────────────────────────────────
